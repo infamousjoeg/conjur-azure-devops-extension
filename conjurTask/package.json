@@ -1,6 +1,6 @@
 {
   "name": "conjurtask",
-  "version": "1.0.0",
+  "version": "0.0.18",
   "description": "Retrieve Secrets from Cyberark Conjur",
   "main": "index.js",
   "scripts": {
