@@ -1,20 +1,32 @@
 # Conjur Azure DevOps Extension
-Azure Devops Task Extension for retrieving secrets from the Cyberark Conjur Secrets Manager
+Azure Devops Task Extension for retrieving secrets from the CyberArk Conjur Secrets Manager
 
-## Certification Level
-![](https://img.shields.io/badge/Certification%20Level-Community-28A745?link=https://github.com/cyberark/community/blob/master/Conjur/conventions/certification-levels.md)
-
-This repo is a **Community** level project. It's a community contributed project that **is not reviewed or supported
-by CyberArk**. For more detailed information on our certification levels, see [our community guidelines](https://github.com/cyberark/community/blob/master/Conjur/conventions/certification-levels.md#community).
+[Get it on the Azure Marketplace](https://marketplace.visualstudio.com/items?itemName=InfamousJoeG.cyberark-conjur-secrets)
 
 ## Requirements
 - Conjur Secrets Manager Enterprise v10+
 - Conjur Secrets Manager Open Source v1.1+
 - Azure DevOps
 
+## Usage
+
+For the full demonstration repository, please visit [https://github.com/infamousjoeg/azure-devops-demo](https://github.com/infamousjoeg/azure-devops-demo).
+
+### Declaring GetConjurSecret Task
+
+```yaml
+- task: GetConjurSecret@1
+  inputs:
+    conjurApplianceURL: 'https://conjur.example.com'
+    conjurAccount: 'demo'
+    conjurUsername: 'host/cloud/azure/devops/pipeline-demo'
+    conjurAPIKey: $(API_KEY)
+    ignoreSSL: false
+```
+
 ## Development
 
-Please follow this guide to properaly set up this extension:
+Please follow this guide to properly set up this extension:
 https://docs.microsoft.com/en-us/azure/devops/extend/develop/add-build-task?view=azure-devops
 
 ## Contributing

@@ -82,6 +82,7 @@ function sendHttpRequest(hostname, endpoint, method, authorization, data, ignore
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': dataLength,
+                'User-Agent': 'AzureDevOps',
                 'Authorization': authorization
             }
         };
@@ -91,11 +92,12 @@ function sendHttpRequest(hostname, endpoint, method, authorization, data, ignore
             res.on('end', function () { return resolve(responseBody.join('')); });
             // If non-200 code is returned from any call using this method the task extension will fail
             if (res.statusCode != 200) {
-                tl.setResult(tl.TaskResult.Failed, "recieved status code '" + res.statusCode + "': " + responseBody.join(''));
+                tl.setResult(tl.TaskResult.Failed, "Received status code '" + res.statusCode + "': " + responseBody.join(''));
             }
         });
         req.on('error', function (error) {
             console.error(error);
+            tl.setResult(tl.TaskResult.Failed, error);
         });
         if (data) {
             req.write(data);
@@ -108,7 +110,7 @@ function authenticate(hostname, account, username, apiKey, type, ignoreSsl) {
     switch (type) {
         case AuthnTypes.ApiKey:
             username = encodeURIComponent(username);
-            var endpoint = "/authn/" + account + "/" + username + "/authenticate";
+            var endpoint = "/api/authn/" + account + "/" + username + "/authenticate";
             return sendHttpRequest(hostname, endpoint, 'POST', "", apiKey, ignoreSsl);
         default:
             tl.setResult(tl.TaskResult.Failed, "Invalid authentication type '" + type + "'. Valid types are 'apiKey'");
@@ -116,7 +118,7 @@ function authenticate(hostname, account, username, apiKey, type, ignoreSsl) {
 }
 function getSecret(hostname, account, token, secretId, ignoreSsl) {
     secretId = encodeURIComponent(secretId);
-    var endpoint = "/secrets/" + account + "/variable/" + secretId;
+    var endpoint = "/api/secrets/" + account + "/variable/" + secretId;
     token = getTokenHeader(token);
     return sendHttpRequest(hostname, endpoint, 'GET', token, null, ignoreSsl);
 }

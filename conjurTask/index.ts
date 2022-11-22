@@ -48,6 +48,7 @@ function sendHttpRequest(hostname : string, endpoint : string, method : 'GET' | 
             headers: {
                 'Content-Type': 'application/json',
                 'Content-Length': dataLength,
+                'User-Agent': 'AzureDevOps',
                 'Authorization': authorization
             }
         }
@@ -60,7 +61,7 @@ function sendHttpRequest(hostname : string, endpoint : string, method : 'GET' | 
 
             // If non-200 code is returned from any call using this method the task extension will fail
             if(res.statusCode != 200){
-                tl.setResult(tl.TaskResult.Failed, `recieved status code '${res.statusCode}': ${responseBody.join('')}`);
+                tl.setResult(tl.TaskResult.Failed, `Received status code '${res.statusCode}': ${responseBody.join('')}`);
             }
         })
         
@@ -79,7 +80,7 @@ function authenticate(hostname: string, account : string, username : string, api
     switch(type) {
         case AuthnTypes.ApiKey:
             username = encodeURIComponent(username);
-            var endpoint = `/authn/${account}/${username}/authenticate`;
+            var endpoint = `/api/authn/${account}/${username}/authenticate`;
             return sendHttpRequest(hostname, endpoint, 'POST', "", apiKey, ignoreSsl);
         default:
             tl.setResult(tl.TaskResult.Failed, `Invalid authentication type '${type}'. Valid types are 'apiKey'`)
@@ -88,7 +89,7 @@ function authenticate(hostname: string, account : string, username : string, api
 
 function getSecret(hostname: string, account : string, token : string, secretId : string, ignoreSsl : boolean) {
     secretId = encodeURIComponent(secretId);
-    var endpoint = `/secrets/${account}/variable/${secretId}`;
+    var endpoint = `/api/secrets/${account}/variable/${secretId}`;
     token = getTokenHeader(token);
     return sendHttpRequest(hostname, endpoint, 'GET', token, null, ignoreSsl)
 }
